@@ -43,24 +43,10 @@ if [[ $(id -u) == 0 ]] && [[ "$1" = 'atlantis' ]]; then
 fi
 
 to_exec=""
-echo "the command is : $@"
-if [[ -f /etc/atlantis/workflow.yaml ]]; then
-    echo "file exists"
-fi
-
-if [[ "${@}" == *"atlantis"* ]]; then
-    echo "contains atlantis substring"
-fi
-
-if [[ "${@}" == *"server"* ]]; then
-    echo "contains Server substring"
-fi
 
 if [[ "$@" == *"atlantis"* ]] && [[ "$@" == *"server"* ]] && [[ -f /etc/atlantis/workflow.yaml ]]; then
     to_exec="$@ --repo-config=/etc/atlantis/workflow.yaml"
-    #exec "$@ --repo-config=/etc/atlantis/workflow.yaml"
 else
-    #exec "$@"
     to_exec="$@"
 fi
 
