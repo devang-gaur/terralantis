@@ -31,9 +31,6 @@ if [[ ! -z $config_file ]]; then
     export TERRASCAN_CONFIG=$config_file
 fi
 
-echo "$@"
-echo "$copy"
-echo "config file is $TERRASCAN_CONFIG"
 if [[ -z $copy ]]; then
     atlantis-entrypoint.sh $@
 else
