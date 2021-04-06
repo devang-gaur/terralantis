@@ -3,14 +3,13 @@ ENV DEFAULT_TERRASCAN_VERSION=1.4.0
 #ADD workflow.yaml ./workflow.yaml
 RUN touch tfplan && mkdir -p /etc/atlantis/
 ENV PLANFILE tfplan
-ADD setup.sh ./setup.sh
+#TODO: revert back to using setup.sh rather than setup1.sh
+ADD setup1.sh ./setup.sh
 ADD terrascan.sh ./terrascan.sh
-ADD docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x ./setup.sh ./terrascan.sh /usr/local/bin/docker-entrypoint.sh
+ADD atlantis-entrypoint.sh /usr/local/bin/atlantis-entrypoint.sh
+ADD entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x ./setup.sh ./terrascan.sh /usr/local/bin/atlantis-entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN . ./setup.sh
 ADD workflow.yaml /etc/atlantis/workflow.yaml
-
-# copy docker entrypoint
-
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "entrypoint.sh"]
 CMD ["server"]
