@@ -1,5 +1,17 @@
 #!/bin/bash
 set -e
+
+declare flag
+
+function lookup_repo_config_flag() {
+    for i in "$@"
+    do
+        if [[ "$i" == "--repo-config"* ]]; then
+            flag="true"
+        fi
+    done
+}
+
 # Modified: https://github.com/hashicorp/docker-consul/blob/2c2873f9d619220d1eef0bc46ec78443f55a10b5/0.X/docker-entrypoint.sh
 
 # If the user is trying to run atlantis directly with some arguments, then
@@ -44,11 +56,14 @@ fi
 
 to_exec=""
 
-if [[ "$@" == *"atlantis"* ]] && [[ "$@" == *"server"* ]] && [[ -f /etc/atlantis/workflow.yaml ]]; then
+lookup_repo_config_flag $@
+
+if [[ $flag != "true" ]] && [[ "$@" == *"atlantis"* ]] && [[ "$@" == *"server"* ]] && [[ -f /etc/atlantis/workflow.yaml ]]; then
+    echo "using the default repo-config"
     to_exec="$@ --repo-config=/etc/atlantis/workflow.yaml"
 else
     to_exec="$@"
 fi
 
-echo "gonna execute $to_exec"
+echo "executing command : $to_exec"
 exec $to_exec

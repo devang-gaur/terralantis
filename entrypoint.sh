@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-
 count=1
 declare config_file
 declare copy
@@ -8,7 +7,6 @@ function fetch_configfile() {
     for i in "${@:1}"
     do
         if [[ "$i" == "-c"* ]]; then
-#           echo $i
             if [[ $i =~ -c=(.+) ]]; then
                 eval config_file="${BASH_REMATCH[1]}"
                 copy=${@/"$i"}
@@ -18,7 +16,7 @@ function fetch_configfile() {
             else
                 eval var='$'$(( count + 1 ))
                 eval config_file="$var"
-                copy=${@/-c}
+                copy=$(echo "$@" | sed "s/-c//")
                 copy=${copy/$config_file}
             fi
         fi
